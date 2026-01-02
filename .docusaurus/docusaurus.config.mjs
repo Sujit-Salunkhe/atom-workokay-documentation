@@ -95,7 +95,7 @@ export default {
     "footer": {
       "style": "dark",
       "links": [],
-      "copyright": "Copyright © 2025 Atom Ui, Inc."
+      "copyright": "Copyright © 2026 Atom Ui, Inc."
     },
     "prism": {
       "theme": {

@@ -114,15 +114,15 @@ export default [
   },
   {
     path: '/documentation/docs',
-    component: ComponentCreator('/documentation/docs', 'd60'),
+    component: ComponentCreator('/documentation/docs', '7e4'),
     routes: [
       {
         path: '/documentation/docs',
-        component: ComponentCreator('/documentation/docs', 'a4f'),
+        component: ComponentCreator('/documentation/docs', '909'),
         routes: [
           {
             path: '/documentation/docs',
-            component: ComponentCreator('/documentation/docs', 'cf2'),
+            component: ComponentCreator('/documentation/docs', 'ec2'),
             routes: [
               {
                 path: '/documentation/docs/category/components',
@@ -133,6 +133,18 @@ export default [
               {
                 path: '/documentation/docs/component/button',
                 component: ComponentCreator('/documentation/docs/component/button', 'a18'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/documentation/docs/component/drawer',
+                component: ComponentCreator('/documentation/docs/component/drawer', 'c46'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/documentation/docs/component/progressbar',
+                component: ComponentCreator('/documentation/docs/component/progressbar', '9e2'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

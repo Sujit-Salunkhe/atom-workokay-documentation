@@ -16,6 +16,16 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "component/drawer",
+              "path": "/documentation/docs/component/drawer",
+              "sidebar": "tutorialSidebar"
+            },
+            {
+              "id": "component/progressbar",
+              "path": "/documentation/docs/component/progressbar",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "components",
               "path": "/documentation/docs/components",
               "sidebar": "tutorialSidebar"

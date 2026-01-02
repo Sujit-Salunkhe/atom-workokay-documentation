@@ -249,17 +249,17 @@
     },
     "content": "content---documentation-markdown-page-393-bce"
   },
-  "/documentation/docs-d60": {
+  "/documentation/docs-7e4": {
     "__comp": "__comp---theme-docs-root-5-e-9-0b6",
     "__context": {
       "plugin": "plugin---documentation-docsaba-b17"
     }
   },
-  "/documentation/docs-a4f": {
+  "/documentation/docs-909": {
     "__comp": "__comp---theme-doc-version-roota-7-b-5de",
     "__props": "__props---documentation-docsf-0-e-064"
   },
-  "/documentation/docs-cf2": {
+  "/documentation/docs-ec2": {
     "__comp": "__comp---theme-doc-roota-94-67a"
   },
   "/documentation/docs/category/components-ae9": {
@@ -269,6 +269,14 @@
   "/documentation/docs/component/button-a18": {
     "__comp": "__comp---theme-doc-item-178-a40",
     "content": "content---documentation-docs-component-buttonfdf-065"
+  },
+  "/documentation/docs/component/drawer-c46": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---documentation-docs-component-drawerbc-5-c0b"
+  },
+  "/documentation/docs/component/progressbar-9e2": {
+    "__comp": "__comp---theme-doc-item-178-a40",
+    "content": "content---documentation-docs-component-progressbar-7-fc-1a6"
   },
   "/documentation/docs/components-89f": {
     "__comp": "__comp---theme-doc-item-178-a40",

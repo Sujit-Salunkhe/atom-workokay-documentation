@@ -5,7 +5,7 @@ sidebar_position: 1
 
 ## Basic usage
 
-```jsx title="Codeblocks
+```jsx title=Codeblocks
 export function ButtonExamples() {
   return (
     <div style={{ display: "flex", gap: "1rem" }}>
