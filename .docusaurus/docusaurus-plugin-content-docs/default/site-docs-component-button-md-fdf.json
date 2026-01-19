@@ -18,11 +18,11 @@
   },
   "sidebar": "tutorialSidebar",
   "previous": {
-    "title": "Components",
-    "permalink": "/documentation/docs/category/components"
+    "title": "Badge",
+    "permalink": "/documentation/docs/component/badge"
   },
   "next": {
-    "title": "ProgressBar",
+    "title": "Progress Bar",
     "permalink": "/documentation/docs/component/progressbar"
   }
 }
