@@ -77,6 +77,7 @@ required?: boolean;
 <TextArea variant="subtle" />
 ```
 ### Sizes
+
 ```jsx
 "sm" – min-h-10 text-xs w-64
 "md" – min-h-16 text-sm w-80 (default)

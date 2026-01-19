@@ -236,26 +236,6 @@ export interface CardMediaProps
 </Card>
 ```
 
-## Stats Card
-```jsx
-<Card className="w-72">
-  <CardHeader divider align="center">
-    <CardTitle>Sales Overview</CardTitle>
-  </CardHeader>
-  <CardBody noPadding className="p-0">
-    <div className="p-6 space-y-4">
-      <div className="flex justify-between">
-        <span className="text-sm text-[var(--atom-text-muted)]">This month</span>
-        <Badge variant="success" tone="high">+12%</Badge>
-      </div>
-      <div className="text-3xl font-bold text-[var(--atom-theme-text-primary)]">
-        $24,392
-      </div>
-    </div>
-  </CardBody>
-</Card>
-```
-
 ## Accessibility features
 
 ```jsx
@@ -271,15 +251,28 @@ export interface CardMediaProps
 ## Theming behavior
 
 ```jsx
-Token-driven design system integration:
-
-Card: --atom-theme-surface-primary, --atom-theme-border-primary
-Title: --atom-theme-text-primary  
-Subtitle: --atom-text-muted
-Focus: --atom-ring-color, --atom-ring-offset
-
-color-mix(in_srgb,var(--atom-theme-border-primary)_60%,transparent)
-→ Automatic theme-aware border opacity
-
-Theme switching updates ALL cards instantly.
+| Component | Tokens Used                                               |
+| --------- | --------------------------------------------------------- |
+| Card      | --atom-theme-surface-primary, --atom-theme-border-primary |
+| Title     | --atom-theme-text-primary                                 |
+| Subtitle  | --atom-text-muted                                         |
+| Focus     | --atom-ring-color, --atom-ring-offset                     |
+| Hover     | Automatic shadow + scale-[1.02]                           |
 ```
+
+Key Features
+- 3 elevation variants - elevated, outlined, flat
+
+- Interactive states - hoverable, clickable
+
+- Avatar + action support - Profile card ready
+
+- Media component - 5 responsive sizes
+
+- Flexible layout - align, divider, noPadding
+
+- Theme complete - CSS variables everywhere
+
+- TypeScript complete - Full prop interfaces
+
+- Smooth animations - Hover scale + shadows

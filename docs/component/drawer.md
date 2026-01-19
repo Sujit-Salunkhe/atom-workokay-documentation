@@ -76,16 +76,17 @@ export function DrawerExamples() {
 ```jsx title=codeblocks
 
   Position and slide direction:
-    "right" – slides from right edge, full height with left border
-    "left" – slides from left edge, full height with right border
-    "bottom" – slides from bottom edge, full width with top border
-    "top" – slides from top edge, full width with bottom border
+    "right" (default) – slides from right edge, full height
+    "left" – slides from left edge, full height 
+    "top" – slides from top edge, full width
+    "bottom" – slides from bottom edge, full width
 
   Example:
     <Drawer open={open} onOpenChange={setOpen} variant="right" />
     <Drawer open={open} onOpenChange={setOpen} variant="left" />
     <Drawer open={open} onOpenChange={setOpen} variant="bottom" />
     <Drawer open={open} onOpenChange={setOpen} variant="top" />
+
 ```
 
 ### Size
@@ -94,10 +95,10 @@ export function DrawerExamples() {
 
   Controls drawer dimensions based on variant:
     For right/left variants (width):
-      "sm" – 239px
-      "md" – 478px (default)
-      "lg" – 720px
-      "xl" – 900px
+      "sm" – 239px (w-[239px])
+      "md" – 478px (w-[478px]) (default)
+      "lg" – 720px (w-[720px])
+      "xl" – 900px (w-[900px])
 
     For top/bottom variants (height):
       "sm" – 320px (h-80)
@@ -107,8 +108,9 @@ export function DrawerExamples() {
 
   Example:
     <Drawer variant="right" size="sm" open={open} onOpenChange={setOpen} />
-    <Drawer variant="right" size="md" open={open} onOpenChange={setOpen} />
-    <Drawer variant="bottom" size="lg" open={open} onOpenChange={setOpen} />
+    <Drawer variant="right" size="lg" open={open} onOpenChange={setOpen} />
+    <Drawer variant="bottom" size="xl" open={open} onOpenChange={setOpen} />
+
 ```
 
 ## Behavioral props
@@ -116,8 +118,7 @@ export function DrawerExamples() {
 ### open
 
 ```jsx title=codeblocks
-
-   Controls drawer visibility state:
+  Controls drawer visibility state:
     const [open, setOpen] = useState(false);
 
     <Drawer open={open} onOpenChange={setOpen}>
@@ -125,19 +126,18 @@ export function DrawerExamples() {
     </Drawer>
 
   When open is true:
-    Drawer slides into view with smooth transition
-    Body scroll is prevented
-    Backdrop is displayed (if showBackdrop is true)
-    Focus management is applied
+    Drawer slides into view with 300ms transition
+    Body scroll is prevented (with scrollbar compensation)
+    Backdrop appears (if showBackdrop is true)
+    Focus is trapped within drawer content
+
 ```
 
 ### onOpenChange
 
 ```jsx title=codeblocks
-
   Callback invoked when drawer should open or close:
     const handleOpenChange = (isOpen: boolean) => {
-      console.log(`Drawer is now ${isOpen ? 'open' : 'closed'}`);
       setOpen(isOpen);
     };
 
@@ -146,91 +146,46 @@ export function DrawerExamples() {
     </Drawer>
 
   Triggered by:
-    Backdrop click (if closeOnBackdropClick is true)
-    Escape key press (if closeOnEscape is true)
-    Manual calls from button onClick handlers
+    Backdrop click (if closeOnBackdropClick=true)
+    Escape key press (if closeOnEscape=true)
+    Manual state changes
+
 ```
 
 ### closeOnBackdropClick
 
 ```jsx title=codeblocks
-
   Close drawer when clicking backdrop overlay:
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      closeOnBackdropClick={true}  // default
-    >
-      {/* Drawer content */}
-    </Drawer>
-
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      closeOnBackdropClick={false}  // prevents backdrop close
-    >
-      {/* Drawer content */}
-    </Drawer>
+     Close drawer when clicking backdrop overlay:
+    <Drawer open={open} onOpenChange={setOpen} closeOnBackdropClick={true} />
+    <Drawer open={open} onOpenChange={setOpen} closeOnBackdropClick={false} />
 ```
 
 ### closeOnEscape
 
 ```jsx title=codeblocks
-
   Close drawer when Escape key is pressed:
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      closeOnEscape={true}  // default
-    >
-      {/* Drawer content */}
-    </Drawer>
-
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      closeOnEscape={false}  // prevents Escape key close
-    >
-      {/* Drawer content */}
-    </Drawer>
+    <Drawer open={open} onOpenChange={setOpen} closeOnEscape={true} />
+    <Drawer open={open} onOpenChange={setOpen} closeOnEscape={false} /
 ```
 
 ### showBackdrop
 
 ```jsx title=codeblocks
-
   Display semi-transparent backdrop overlay:
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      showBackdrop={true}  // default - shows backdrop
-    >
-      {/* Drawer content */}
-    </Drawer>
-
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      showBackdrop={false}  // no backdrop overlay
-    >
-      {/* Drawer content */}
-    </Drawer>
+    <Drawer open={open} onOpenChange={setOpen} showBackdrop={true} />
+    <Drawer open={open} onOpenChange={setOpen} showBackdrop={false} />
 ```
 
 ### asChild
 
 ```jsx title=codeblocks
-
   Render drawer styles on a different element via Radix Slot:
     <Drawer open={open} onOpenChange={setOpen} asChild>
-      <aside>
+      <aside aria-label="Custom drawer">
         {/* Custom element with drawer behavior */}
       </aside>
     </Drawer>
-
-  When asChild is true:
-    Drawer does not render a <div> element
-    It renders a Slot that passes props & class names to the child
 ```
 
 ## Subcomponents
@@ -443,71 +398,24 @@ export function NavigationDrawer() {
 ## Theming behavior
 
 ```jsx title=codeblocks
-
   The Drawer uses CSS tokens for theming:
-    Background:
-      var(--atom-card-bg)
+    Background: var(--atom-card-bg)
+    Border: var(--atom-card-border) 
+    Text: var(--atom-card-fg)
+    Backdrop: bg-black/50 (fixed opacity)
 
-    Border:
-      var(--atom-card-border)
-
-    Backdrop:
-      bg-black/50 (50% opacity black)
-
-    Shadow:
-      shadow-2xl (Tailwind utility)
-
-  These tokens are set by the active theme:
-    .atom-theme[data-theme="light"] {
-      --atom-card-bg: #ffffff;
-      --atom-card-border: #e5e7eb;
-      /* ... */
-    }
-
-    .atom-theme[data-theme="dark"] {
-      --atom-card-bg: #1f2937;
-      --atom-card-border: #374151;
-      /* ... */
-    }
-
-  Changing data-theme will automatically update all Drawer instances.
+  These tokens adapt to your active theme automatically.
 ```
 
 ## Accessibility
 
 ```jsx title=codeblocks
-
-  The Drawer follows ARIA best practices:
-    role="dialog" for semantic meaning
-    aria-modal={open} indicates modal behavior
-    aria-hidden={!open} hides from screen readers when closed
-    aria-labelledby="drawer-title" links to DrawerTitle
-    data-state="open|closed" for styling hooks
-
-  Body scroll prevention:
-    When drawer opens, body scroll is locked
-    Scrollbar width compensation prevents layout shift
-    Automatically restored when drawer closes
-
-  Keyboard interactions:
-    Escape key closes drawer (if closeOnEscape is true)
-    Focus is trapped within drawer when open
-
-  Example with full accessibility:
-    <Drawer
-      open={open}
-      onOpenChange={setOpen}
-      variant="right"
-      closeOnEscape={true}
-    >
-      <DrawerHeader>
-        <DrawerTitle>Accessible Drawer</DrawerTitle>
-        <DrawerDescription>
-          This drawer is fully accessible to screen readers.
-        </DrawerDescription>
-      </DrawerHeader>
-      <DrawerBody>
-        {/* Content */}
-      </DrawerBody>
-    </Drawer>
+  Full keyboard and screen reader support:
+    role="dialog" aria-modal="true"
+    Focus trapping within drawer content
+    Escape key handling
+    ARIA label/description support
+    Automatic focus restoration on close
+    Body scroll prevention with layout shift compensation
+    Portal rendering via useThemePortal hook
 ```

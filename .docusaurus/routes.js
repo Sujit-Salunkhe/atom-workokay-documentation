@@ -114,15 +114,15 @@ export default [
   },
   {
     path: '/documentation/docs',
-    component: ComponentCreator('/documentation/docs', 'ccd'),
+    component: ComponentCreator('/documentation/docs', 'cf7'),
     routes: [
       {
         path: '/documentation/docs',
-        component: ComponentCreator('/documentation/docs', '0cd'),
+        component: ComponentCreator('/documentation/docs', '72a'),
         routes: [
           {
             path: '/documentation/docs',
-            component: ComponentCreator('/documentation/docs', '540'),
+            component: ComponentCreator('/documentation/docs', 'cb0'),
             routes: [
               {
                 path: '/documentation/docs/category/components',
@@ -283,6 +283,12 @@ export default [
               {
                 path: '/documentation/docs/component/textArea',
                 component: ComponentCreator('/documentation/docs/component/textArea', '778'),
+                exact: true,
+                sidebar: "tutorialSidebar"
+              },
+              {
+                path: '/documentation/docs/component/tooltip',
+                component: ComponentCreator('/documentation/docs/component/tooltip', '424'),
                 exact: true,
                 sidebar: "tutorialSidebar"
               },

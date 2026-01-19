@@ -22,19 +22,25 @@ export function ProgressBarExamples() {
 ```
 
 ## Props
+
 ```jsx title=Codeblocks
   ProgressBar props:
     export interface ProgressBarProps
-    extends Omit<React.HTMLAttributes<HTMLDivElement>, "children">,
-    VariantProps<typeof progressTrackVariants> {
+    extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
     /** Progress value from 0 to 100 */
     value?: number;
     /** If true, shows animated indeterminate state */
     indeterminate?: boolean;
-    /** Optional label for screen readers */
+    /** Accessible label */
     ariaLabel?: string;
-    /** Visual variant for both track and indicator */
-    variant?: "default" | "outline" | "subtle";
+    /** Visual variant (syncs track + indicator) */
+    variant?: ProgressBarIndicatorVariant;
+    /** Track background variant */
+    trackVariant?: ProgressBarTrackVariant;
+    /** Size of the progress bar */
+    size?: ProgressBarSize;
+    /** Whether to span full width */
+    fullWidth?: boolean;
   }
 ```
 
@@ -71,9 +77,24 @@ export function ProgressBarExamples() {
     <ProgressBar value={50} variant="outline" fullWidth={false} />
 
 ```
+
+### Track Variant
+
+```jsx
+  Independent track background styling:
+    "default" – subtle mixed background
+    "outline" – transparent background  
+    "subtle" – very soft background blend
+
+  Example:
+    <ProgressBar value={50} trackVariant="default" />
+    <ProgressBar value={50} trackVariant="outline" variant="default" />
+```
+
 ## Behavioral props
 
 ### value
+
 ```jsx title=codeblocks
   Progress value from 0 to 100:
     <ProgressBar value={0} variant="default" />
@@ -85,17 +106,19 @@ export function ProgressBarExamples() {
 
 ```
 ### indeterminate
+
 ```jsx title=codeblocks
   Shows an animated loading state when progress is unknown:
     <ProgressBar indeterminate variant="default" />
 
   When indeterminate is true:
-    The indicator animates continuously
+    The indicator animates continuously (40% width, sliding)
     aria-valuenow and aria-valuetext are omitted
     aria-busy is set to true
     The value prop is ignored
 ```
 ### ariaLabel
+
 ``` jsx title=jsx
   Provides accessible label for screen readers:
     <ProgressBar 
@@ -107,7 +130,9 @@ export function ProgressBarExamples() {
   Default value is "Progress" if not specified.
 ```
 ## Usage examples
+
 ### Loading state
+
 ```jsx title=codeblocks
   import { ProgressBar } from "@workokay/atom";
 
@@ -121,6 +146,7 @@ export function ProgressBarExamples() {
   }
 ```
 ### Upload progress
+
 ``` jsx title=codeblocks
   import { ProgressBar } from "@workokay/atom";
   import { useState, useEffect } from "react";
@@ -149,6 +175,7 @@ export function ProgressBarExamples() {
   }
 ```
 ### Status indicators
+
 ```jsx title=codeblocks
   import { ProgressBar } from "@workokay/atom";
 
@@ -174,48 +201,60 @@ export function ProgressBarExamples() {
   }
 ```
 
-### Theming behavior
+## Theming behavior
+
 ```jsx title=codeblocks
   The ProgressBar uses CSS tokens for theming:
-    Track background:
-      color-mix(in srgb, var(--atom-badge-archived-border) 8%, transparent)
-    
-    Track border:
-      var(--atom-badge-archived-border)
-    
-    Indicator background (default variant):
-      var(--atom-progressbar-bg)
-    
-    Indicator background (outline variant):
-      var(--atom-primary)
-    
-    Border radius:
-      var(--atom-radius-1)
+    Track border: var(--atom-theme-border-primary)
+    Track backgrounds: color-mix() with theme border colors
+    Indicator backgrounds: 
+      default → var(--atom-theme-surface-secondary)
+      outline → var(--atom-primary)
+      subtle → color-mix(in srgb, var(--atom-primary) 45%, transparent)
+    Border radius: var(--atom-radius-1)
+    Sizes: h-3 (sm), h-3.5 (md), h-4 (lg)
 
-  These tokens are set by the active theme:
-    .atom-theme[data-theme="light"] {
-      --atom-progressbar-bg: var(--atom-primary);
-      --atom-badge-archived-border: var(--atom-border);
-      --atom-radius-1: 0.375rem;
-      /* ... */
-    }
-
-  Changing data-theme will automatically update all ProgressBar instances.
+  These tokens are set by the active theme and automatically update across theme changes.
 ```
 
-### Accessibility
+## Accessibility
+
 ```jsx title=codeblocks
   The ProgressBar follows ARIA best practices:
     role="progressbar" for semantic meaning
     aria-valuemin="0" and aria-valuemax="100" for range
-    aria-valuenow and aria-valuetext for current value
-    aria-busy when in indeterminate state
+    aria-valuenow and aria-valuetext for current value (omitted when indeterminate)
+    aria-busy="true" when indeterminate
     aria-label for custom descriptions
+    data-slot attributes for testing
 
   Example with full accessibility:
     <ProgressBar 
       value={65}
       variant="default"
-      ariaLabel="Document processing progress"
+      ariaLabel="Document processing progress: 65% complete"
     />
 ```
+
+## Animation
+
+```jsx
+  Smooth transitions and loading states:
+    Indicator width: transition-all duration-300 ease-out
+    Indeterminate: animate-indeterminate class (40% width, translateX sliding)
+    Respects prefers-reduced-motion automatically via Tailwind
+```
+
+Notes.
+
+- Uses data-slot="progress-track" and data-slot="progress-indicator" for testing
+
+- data-testid="progress-indicator" on indicator for e2e tests
+
+- Value automatically clamped: Math.max(0, Math.min(100, value))
+
+- variant prop syncs both trackVariant and indicatorVariant automatically
+
+- Fullwidth is true by default (w-full)
+
+- 300ms ease-out transition for smooth value updates

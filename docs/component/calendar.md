@@ -43,37 +43,28 @@ export function CalendarExamples() {
 ## Props
 
 ```jsx title=Codeblocks
-Calendar props:
-  export interface CalendarProps
-    extends React.ComponentProps<typeof DayPicker> {
-    /** Custom variant for navigation buttons */
-    buttonVariant?: 'ghost' | 'default' | 'outline' | 'secondary' | 'link' | 'destructive'
-    /** Additional CSS classes for calendar wrapper */
-    className?: string
-    /** Override individual element class names */
-    classNames?: Partial<ClassNames>
-    /** Show dates from adjacent months (default: true) */
-    showOutsideDays?: boolean
-    /** Caption layout style (default: 'dropdown') */
-    captionLayout?: 'label' | 'dropdown' | 'dropdown-months' | 'dropdown-years'
-    /** Custom date formatting functions */
-    formatters?: Partial<Formatters>
-    /** Override internal components */
-    components?: Partial<Components>
-  }
+  Calendar props:
+    export type CalendarProps = DayPickerProps & {
+      /** Custom variant for day selection buttons */
+      navButtonVariant?: ButtonVariant;
+    }
 
-  Inherited from react-day-picker:
-    mode: 'single' | 'multiple' | 'range'
-    selected: Date | Date[] | DateRange | undefined
-    onSelect: (date) => void
+  Key props:
+    mode: "single" | "multiple" | "range"
+    selected: Date | Date[] | DateRange | undefined  
+    onSelect: (date: Date | undefined | DateRange) => void
     disabled: Date | Date[] | Matcher | Matcher[]
-    fromDate: Date
-    toDate: Date
-    numberOfMonths: number
-    defaultMonth: Date
-    locale: Locale
-    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6
-    ...and more
+    fromDate?: Date
+    toDate?: Date
+    defaultMonth?: Date
+    numberOfMonths?: number
+    showOutsideDays?: boolean (default: true)
+    captionLayout?: "dropdown" | "label" | "dropdown-months" | "dropdown-years" (default: "dropdown")
+    navButtonVariant?: ButtonVariant (default: "iconSquareGhost")
+    className?: string
+    classNames?: Partial<ClassNames>
+    formatters?: Partial<Formatters>
+    components?: Partial<Components>
 ```
 ### Mode variants
 
@@ -370,109 +361,6 @@ Add custom styles to calendar container:
 
 ```
 
-## Integration patterns
-
-### Popover Date Picker
-
-```jsx title=codeblocks
-Combine with Popover for input field picker:
-  import { Popover, PopoverContent, PopoverTrigger } from '@workokay/atom'
-  import { Button } from '@workokay/atom'
-  import { format } from 'date-fns'
-  import { CalendarIcon } from 'lucide-react'
-
-  export function DatePicker() {
-    const [date, setDate] = useState<Date>()
-
-    return (
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-[240px]">
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, 'PPP') : 'Pick a date'}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-          />
-        </PopoverContent>
-      </Popover>
-    )
-  }
-
-```
-
-### Form integration
-```jsx title=codeblocks
-Use with react-hook-form:
-  import { useForm, Controller } from 'react-hook-form'
-
-  export function DateForm() {
-    const { control, handleSubmit } = useForm()
-
-    return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          control={control}
-          name="date"
-          render={({ field }) => (
-            <Calendar
-              mode="single"
-              selected={field.value}
-              onSelect={field.onChange}
-            />
-          )}
-        />
-      </form>
-    )
-  }
-
-```
-
-### Date range with presets
-
-```jsx title=codeblocks
-Add quick select options for common ranges:
-  import { addDays, subDays } from 'date-fns'
-
-  export function DateRangeWithPresets() {
-    const [range, setRange] = useState<DateRange | undefined>()
-
-    const presets = [
-      { label: 'Today', range: { from: new Date(), to: new Date() } },
-      { label: 'Last 7 days', range: { from: subDays(new Date(), 7), to: new Date() } },
-      { label: 'Last 30 days', range: { from: subDays(new Date(), 30), to: new Date() } },
-      { label: 'Next 7 days', range: { from: new Date(), to: addDays(new Date(), 7) } }
-    ]
-
-    return (
-      <div className="flex gap-4">
-        <div className="flex flex-col gap-2">
-          {presets.map((preset) => (
-            <Button
-              key={preset.label}
-              variant="ghost"
-              onClick={() => setRange(preset.range)}
-            >
-              {preset.label}
-            </Button>
-          ))}
-        </div>
-        <Calendar
-          mode="range"
-          selected={range}
-          onSelect={setRange}
-          numberOfMonths={2}
-        />
-      </div>
-    )
-  }
-
-```
-
 ## Accessibility
 
 ### Keyword navigation
@@ -507,13 +395,7 @@ Add descriptive labels for better accessibility:
 
 ```
 
-### Icon Button Accessibility
 
-```jsx title=codeblocks
-Navigation buttons include proper ARIA labels automatically.
-Ensure icon-only buttons have aria-label attributes when customizing.
-
-```
 
 ## Theming behavior
 
@@ -545,141 +427,7 @@ These tokens are set by the active theme:
 Changing data-theme will automatically recolor all Calendar instances.
 
 ```
-
-## RTL Support 
-```jsx title=codeblocks
-The Calendar automatically supports right-to-left languages:
-  Navigation icons rotate 180° in RTL mode
-  Layout mirrors appropriately
-  No additional configuration needed
-
-  // Component detects RTL via CSS direction or dir attribute
-  <div dir="rtl">
-    <Calendar mode="single" selected={date} onSelect={setDate} />
-  </div>
-```
-
-## Component Architecture
-
-### Internal Components
-
-```jsx title=codeblocks
-Calendar exports two components:
-  1. Calendar – Main component wrapper
-  2. CalendarDayButton – Individual day button (customizable)
-
-You can override CalendarDayButton if needed:
-  import { Calendar, CalendarDayButton } from '@workokay/atom'
-
-  <Calendar
-    mode="single"
-    selected={date}
-    onSelect={setDate}
-    components={{
-      DayButton: CustomDayButton
-    }}
-  />
-
-```
-
-### Icons
-```jsx title=codeblocks
-Uses Lucide React icons by default:
-  ChevronLeftIcon – Previous month
-  ChevronRightIcon – Next month
-  ChevronDownIcon – Dropdown indicators
-
-Override via components prop if needed:
-  <Calendar
-    components={{
-      Chevron: CustomChevronIcon
-    }}
-  />
-
-```
-
-### Performance Considerations
-
-```jsx title=codeblocks
-Optimization tips:
-  1. Memoize selection handlers when passing to parent
-     const handleSelect = useCallback((date) => setDate(date), [])
-
-  2. Use numberOfMonths sparingly (2-3 max for performance)
-
-  3. Avoid re-creating disabled arrays on every render:
-     const disabledDates = useMemo(() => [
-       { before: new Date() },
-       { dayOfWeek:  }[1]
-     ], [])
-
-  4. For large date ranges, consider virtual scrolling patterns
-
-```
-
-## Common use cases
-
-### Appointment booking 
-
-```jsx title=codeblocks
-<Calendar
-  mode="single"
-  selected={appointment}
-  onSelect={setAppointment}
-  disabled={[
-    { before: new Date() },
-    { dayOfWeek:  },[1]
-    ...bookedDates
-  ]}
-  fromDate={new Date()}
-  toDate={addMonths(new Date(), 3)}
-/>
-
-```
-
-### Report date range
-
-```jsx title=codeblocks
-<Calendar
-  mode="range"
-  selected={reportRange}
-  onSelect={setReportRange}
-  numberOfMonths={2}
-  disabled={{ after: new Date() }}
-/>
-
-```
-
-### Birthday Selection
-
-```jsx title=codeblocks
-<Calendar
-  mode="single"
-  selected={birthday}
-  onSelect={setBirthday}
-  captionLayout="dropdown"
-  fromDate={new Date(1920, 0, 1)}
-  toDate={new Date()}
-  defaultMonth={new Date(2000, 0, 1)}
-/>
-
-```
-
-### Vacation Planner
-
-```jsx title=codeblocks
-<Calendar
-  mode="multiple"
-  selected={vacationDays}
-  onSelect={setVacationDays}
-  disabled={{ dayOfWeek:  }}[1]
-  min={5}
-  max={15}
-/>
-
-```
-
-### Browser support 
+## Browser support 
 
 ```jsx title=codeblocks
 Compatible with all modern browsers:
@@ -694,7 +442,6 @@ Requires:
   CSS color-mix() function
 
 ```
-
 ## Dependencies
 
 ``` jsx title=codeblocks
@@ -709,23 +456,4 @@ Internal dependencies:
 
 ```
 
-### TypeScript Support 
 
-```jsx title=codeblocks
-
-Fully typed with TypeScript:
-  import type { DateRange } from 'react-day-picker'
-  import type { CalendarProps } from '@workokay/atom'
-
-  interface MyDatePickerProps {
-    value: Date | undefined
-    onChange: (date: Date | undefined) => void
-  }
-
-  export function MyDatePicker({ value, onChange }: MyDatePickerProps) {
-    return <Calendar mode="single" selected={value} onSelect={onChange} />
-  }
-
-All props are properly typed, including event handlers and custom components.
-
-```

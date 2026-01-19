@@ -1,5 +1,5 @@
 ---
-title: "DialogBox"
+title: "Dialog"
 sidebar_position: 5
 ---
 
@@ -344,7 +344,7 @@ Switching data-theme or overriding these tokens updates all dialogs automaticall
 
 ```
 
-## Accesibility
+## Accessibility
 
 ```tsx titlebox=codeblocks
 Accessibility is handled by the underlying primitives:
@@ -362,7 +362,7 @@ Best practices:
 
 ```
 
-## Comman patterns
+## common patterns
 
 ### Form in dialog
 
@@ -416,25 +416,6 @@ Best practices:
 </Dialog>
 ```
 
-### Scrollble contnet
-
-```jsx titlebox=codeblocks
-<DialogContent>
-  <DialogHeader>
-    <DialogTitle>Terms of service</DialogTitle>
-  </DialogHeader>
-
-  <DialogBody>
-    <div className="space-y-4">
-      {/* long content; DialogContent has max-h-[90vh] and scrolls */}
-    </div>
-  </DialogBody>
-
-  <DialogFooter>
-    <Button variant="primary">Accept</Button>
-  </DialogFooter>
-</DialogContent>
-```
 
 ### Integration notes
 

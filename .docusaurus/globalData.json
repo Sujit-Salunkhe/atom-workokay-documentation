@@ -141,6 +141,11 @@
               "sidebar": "tutorialSidebar"
             },
             {
+              "id": "component/tooltip",
+              "path": "/documentation/docs/component/tooltip",
+              "sidebar": "tutorialSidebar"
+            },
+            {
               "id": "components",
               "path": "/documentation/docs/components",
               "sidebar": "tutorialSidebar"
