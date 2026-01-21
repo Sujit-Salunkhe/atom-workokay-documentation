@@ -102,7 +102,7 @@ fullWidth?: boolean; // w-full
 </Switch>
 ```
 
-### Animation details:
+### Animation details
 ```jsx
 Sun: rotate(-180→0), scale(0.4→1), opacity fade
 Moon: scale(0.4→1), opacity fade  
@@ -160,6 +160,7 @@ export function SettingsSwitches() {
 </div>
 ```
 ## Animation system
+
 ```jsx
 Thumb motion:
 x: 0 → [16|20|28]px (size-based)
@@ -173,7 +174,21 @@ Star: opacity fade (decorative)
 ```
 Spring physics:
 ```jsx
-transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+ transition={{
+          x: {
+            type: 'spring',
+            stiffness: 500,
+            damping: 30,
+          },
+          scaleX: {
+            duration: 0.3,
+            ease: 'easeInOut',
+          },
+          scaleY: {
+            duration: 0.3,
+            ease: 'easeInOut',
+          },
+        }}
 ```
 
 ## Styling details

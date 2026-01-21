@@ -3,9 +3,13 @@ title: "Input"
 sidebar_position: 35
 ---
 
-## Basic usage
+## Basic Usage
 
-```jsx title=Codeblocks
+```jsx
+import { useState } from 'react';
+import { Input } from '@workokay/atom/input';
+import { FiMail, FiPhone, FiLock } from 'react-icons/fi';
+
 export function InputExamples() {
   const [formData, setFormData] = useState({
     email: '',
@@ -14,9 +18,10 @@ export function InputExamples() {
   });
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "400px" }}>
-      {/* Basic input */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '400px' }}>
+      {/* Basic labeled input */}
       <Input
+        id="email"
         label="Email address"
         required
         placeholder="user@example.com"
@@ -24,8 +29,9 @@ export function InputExamples() {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
 
-      {/* With icons */}
+      {/* Icon slots */}
       <Input
+        id="phone"
         label="Phone number"
         leftIcon={<FiPhone />}
         placeholder="+1 (555) 123-4567"
@@ -33,18 +39,20 @@ export function InputExamples() {
         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
       />
 
-      {/* Error state */}
+      {/* Error validation */}
       <Input
+        id="password"
         label="Password"
         required
+        type="password"
         errorText="Password must be at least 8 characters"
         value={formData.password}
-        type="password"
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
       />
 
       {/* Success + loading */}
       <Input
+        id="code"
         label="Confirmation code"
         tone="success"
         loading
@@ -54,12 +62,9 @@ export function InputExamples() {
   );
 }
 ```
-## Props
-
-```js
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputVariants> {
+## Props 
+```jsx
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>, VariantProps<typeof inputVariants> {
   /** Leading icon */
   leftIcon?: React.ReactNode;
   /** Trailing icon or loading spinner */
@@ -77,98 +82,93 @@ export interface InputProps
   /** Custom required error message */
   requiredText?: string;
 }
+// Variants:
+size: 'sm' | 'md' | 'lg'          // default: 'md'
+tone: 'default' | 'invalid' | 'success'  // default: 'default'
 ```
+## Size Variants
 
-## Variant props
-### Sizes
+| Size | Height | Padding | Font      | Use Case         |
+| ---- | ------ | ------- | --------- | ---------------- |
+| sm   | 36px   | px-3    | text-sm   | Compact forms    |
+| md   | 40px   | px-3.5  | text-sm   | Default          |
+| lg   | 44px   | px-4    | text-base | Prominent inputs |
 
 ```jsx
-"sm" – h-9 px-3 text-sm (compact)
-"md" – h-10 px-3.5 text-sm (default)
-"lg" – h-11 px-4 text-base (spacious)
-
-<Input size="sm" label="Compact input" />
-<Input size="md" label="Default input" />
-<Input size="lg" label="Large input" />
+<Input size="sm" label="Compact" />
+<Input size="md" label="Default" />
+<Input size="lg" label="Prominent" />
 ```
 
-### Tone states
-```jsx
-"default" – standard theme border (default)
-"invalid" – error border color
-"success" – success border color
-
-<Input tone="success" label="Valid input" />
-<Input tone="invalid" label="Invalid input" />
+## Tone States
+```tsx
+<Input tone="default" label="Standard" />     {/* Theme border */}
+<Input tone="success" label="Valid" />       {/* Success border */}
+<Input tone="invalid" label="Error" />       {/* Error border */}
 ```
-## Behavioral features
 
-### Form validation states
-```jsx
+## Core Features
 
-const [errors, setErrors] = useState({});
+### Auto-Validation
 
-function validateEmail(email) {
-  return email.includes('@') ? null : 'Please enter a valid email';
-}
+### Required field validation (blur-triggered):
 
-// Auto-validation with errorText
+```tsx
+const [touched, setTouched] = useState(false);
+
 <Input
   label="Email"
   required
-  errorText={validateEmail(formData.email)}
-  placeholder="user@example.com"
+  requiredText="Email is required"
+  value={email}
+  onBlur={() => setTouched(true)}
 />
+```
 
-// Required field validation (auto-triggered on blur)
+### Manual error states:
+
+```tsx
 <Input
   label="Phone"
-  required
-  requiredText="Phone number is required"
-  value={formData.phone}
+  errorText={errors.phone || undefined}
+  tone={errors.phone ? 'invalid' : 'default'}
 />
 ```
-### Icon slots
 
-```jsx
-import { FiSearch, FiMail, FiLock } from "react-icons/fi";
-
-<Input
-  leftIcon={<FiSearch />}
-  placeholder="Search..."
-/>
-
-<Input
-  leftIcon={<FiMail />}
-  rightIcon={<FiLock />}
-  type="password"
-  placeholder="Password"
+### Icon Slots
+```tsx
+<Input leftIcon={<FiSearch />} placeholder="Search..." />
+<Input 
+  leftIcon={<FiMail />} 
+  rightIcon={<FiEyeOff />} 
+  type="password" 
 />
 ```
-### Loading state
 
-```jsx
-<Input
-  label="Processing..."
-  loading
-  placeholder="Enter verification code"
-  disabled
+### Loading State
+```tsx
+<Input 
+  label="Verifying..." 
+  loading 
+  disabled 
+  placeholder="Enter code" 
 />
 ```
-## Real-world examples
-## Complete form
-```jsx
-export function CompleteForm() {
+
+## Production Examples
+
+### Complete Form
+
+```tsx
+export function UserForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    name: '', email: '', phone: ''
   });
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validate = () => {
+    const newErrors: any = {};
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email.includes('@')) newErrors.email = 'Valid email required';
     setErrors(newErrors);
@@ -178,12 +178,12 @@ export function CompleteForm() {
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
-      if (validateForm()) {
+      if (validate()) {
         setSubmitting(true);
         // Submit logic
       }
     }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <Input
           label="Full name"
           required
@@ -207,6 +207,7 @@ export function CompleteForm() {
         <Input
           label="Phone"
           leftIcon={<FiPhone />}
+          hint="Optional"
           placeholder="+1 (555) 123-4567"
           value={formData.phone}
           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -216,7 +217,7 @@ export function CompleteForm() {
           type="submit" 
           variant="primary" 
           loading={submitting}
-          disabled={submitting}
+          className="mt-2"
         >
           Create Account
         </Button>
@@ -225,15 +226,16 @@ export function CompleteForm() {
   );
 }
 ```
-## Search + filters
-```jsx
-export function SearchInputs() {
+
+### Search & Filters
+```tsx
+export function SearchBar() {
   return (
-    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'end' }}>
       <Input
         size="lg"
         leftIcon={<FiSearch />}
-        placeholder="Search users..."
+        placeholder="Search users, projects..."
         className="flex-1 min-w-[300px]"
       />
       
@@ -253,105 +255,78 @@ export function SearchInputs() {
 }
 ```
 
-## Accessibility features
+## State Matrix
+
+| State     | Border       | Background   | Ring         | Cursor      |
+| --------- | ------------ | ------------ | ------------ | ----------- |
+| Default   | Theme border | Input BG     | -            | Default     |
+| Hover     | Primary tint | Primary 1%   | -            | Pointer     |
+| Focus     | Primary      | Input BG     | Primary 35%  | -           |
+| Success   | Success      | Input BG     | -            | -           |
+| Invalid   | Error        | Input BG     | Error border | -           |
+| Disabled  | Input border | Input BG 60% | -            | Not-allowed |
+| Read-only | Theme border | Mixed BG     | -            | Default     |
+
+
+## Theming System
+
+### Advanced token-driven design:
+
+| Token               | Usage                  |
+| ------------------- | ---------------------- |
+| --atom-input-bg     | Background             |
+| --atom-input-fg     | Text + caret           |
+| --atom-input-border | Border                 |
+| --atom-input-focus  | Focus border           |
+| --atom-primary      | Selection, hover, ring |
+| --atom-error        | Invalid state          |
+| --atom-success      | Success state          |
+
+
+### Smart interactions:
 
 ```jsx
-✅ Proper label association (htmlFor/id)
-✅ ARIA attributes: aria-invalid, aria-errormessage, aria-describedby
-✅ Auto-generated IDs for all states
-✅ Required field indicator (* + aria-required)
-✅ Touch-friendly focus rings
-✅ Screen reader announces errors/hints
-✅ Semantic error/hint regions
-✅ Keyboard navigation optimized
-✅ Loading spinner (non-interactive right slot)
-```
-## Theming behavior
-
-```jsx
-Advanced input token system:
-
-Core tokens:
---atom-input-bg, --atom-input-fg, --atom-input-border
---atom-input-focus, --atom-primary (caret/focus)
-
-Smart interactions:
+/* Hover tint */
 hover:bg-[color-mix(in_srgb,var(--atom-primary)_1%,transparent)]
-focus-visible:border-[var(--atom-input-focus,var(--atom-primary))]
+
+/* Focus ring */
+focus-visible:ring-1 ring-[color-mix(in_srgb,var(--atom-primary)_35%,transparent)]
+
+/* Selection */
 selection:bg-[color-mix(in_srgb,var(--atom-primary)_30%,transparent)]
 
-Placeholder: 55% foreground opacity
-Disabled: 60% opacity + no hover
-Read-only: mixed background overlay
+/* Placeholder */
+placeholder:text-[color-mix(in_srgb,var(--atom-input-fg)_55%,transparent)]
 ```
-## Advanced patterns
 
-### Inline validation
+## Accessibility
+✅ Complete ARIA - ```aria-invalid```, ```aria-errormessage```,```aria-describedby```
+✅ Label association - Proper ```htmlFor```/```id``` linking
+✅ Auto-generated IDs - ```inp_${reactId}``` fallback
+✅ Required indicator - Visual ```*``` + ```aria-required```
+✅ Error regions - Screen reader announces errors
+✅ Focus management - Clear focus rings
+✅ Loading state - Non-interactive spinner
+✅ Touch targets - 40px+ height (md size)
 
-```jsx
-function ValidatedInput({ label, value, error, ...props }) {
-  return (
-    <Input
-      label={label}
-      errorText={error}
-      tone={error ? 'invalid' : value ? 'success' : 'default'}
-      {...props}
-    />
-  );
-}
+## Advanced Patterns
 
-// Usage
-<ValidatedInput
-  label="Email"
-  value={email}
-  error={errors.email}
-  placeholder="user@example.com"
-/>
-```
-### Compact stacked
+### Compact Stacked Form
 
-```jsx
-<div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-  <Input size="sm" label="First name" />
-  <Input size="sm" label="Last name" />
+```tsx  
+<div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+  <Input size="sm" label="First name *" required />
+  <Input size="sm" label="Last name *" required />
   <Input size="sm" label="Email" type="email" />
 </div>
 ```
-## Integration examples
-### With ContentCard
-```jsx
-jsx
-<ContentCard title="Quick Search" size="sm">
-  <Input
-    size="sm"
-    leftIcon={<FiSearch />}
-    placeholder="Search entire codebase..."
-    className="w-full"
-  />
-</ContentCard>
-```
-### With Card form
-
-```jsx
-
-<Card className="w-[450px]">
-  <CardHeader>
-    <Heading as="h3">User Profile</Heading>
-  </CardHeader>
-  <CardBody className="space-y-4">
-    <Input label="Display name" />
-    <Input label="Email" type="email" />
-    <Input label="Bio" hint="Tell us about yourself (optional)" />
-  </CardBody>
-</Card>
-```
-## State matrix
-
-| State    | Border          | Background      | Ring         |
-| -------- | --------------- | --------------- | ------------ |
-| Default  | Theme border    | Input bg        | Primary 35%  |
-| Hover    | Enhanced border | Primary 1% tint | -            |
-| Focus    | Primary         | Input bg        | Primary ring |
-| Success  | Success color   | Input bg        | -            |
-| Invalid  | Error color     | Input bg        | Error border |
-| Disabled | Input border    | Input bg 60%    | -            |
+Key Features
+- Complete form field - Label + validation + icons + loading
+- 3 sizes - sm/md/lg responsive
+- 3 tones - default/invalid/success
+- Auto-validation - Required fields on blur
+- Icon slots - Left/right positioning
+- Loading spinner - Built-in animation
+- Theme complete - 100% CSS variables
+- TypeScript complete - Full prop interfaces
+- Production-ready - ARIA + focus + keyboard
